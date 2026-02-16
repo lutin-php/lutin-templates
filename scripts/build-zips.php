@@ -26,9 +26,9 @@ const STARTERS_DIR = __DIR__ . '/../starters';
 const DIST_DIR = __DIR__ . '/../dist';
 const MANIFEST_FILE = __DIR__ . '/../starters.json';
 
-// Runtime configuration
-$githubRepo = getenv('GITHUB_REPOSITORY') ?: 'USER/REPO';
-$releaseVersion = getenv('RELEASE_VERSION') ?: '1.0.0';
+// Runtime configuration - use placeholders for CI to replace
+$githubRepo = 'USER/REPO';
+$releaseVersion = '{VERSION}';
 
 /**
  * Recursively add a directory to a ZIP archive

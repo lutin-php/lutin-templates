@@ -54,7 +54,7 @@ jobs:
           VERSION="${{ steps.version.outputs.version }}"
           REPO="${{ github.repository }}"
           sed -i "s|v{VERSION}|v${VERSION}|g" starters.json
-          sed -i "s|USER/REPO|${REPO}|g" starters.json
+          sed -i "s|{REPO}|${REPO}|g" starters.json
           cat starters.json
 
       - name: Upload dist artifacts

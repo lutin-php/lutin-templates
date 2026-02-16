@@ -27,7 +27,7 @@ const DIST_DIR = __DIR__ . '/../dist';
 const MANIFEST_FILE = __DIR__ . '/../starters.json';
 
 // Runtime configuration - use placeholders for CI to replace
-$githubRepo = 'USER/REPO';
+$githubRepo = '{REPO}';
 $releaseVersion = '{VERSION}';
 
 /**

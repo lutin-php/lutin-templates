@@ -151,15 +151,21 @@ class StarterBuilder
      */
     public function addDirectoryToZip(ZipArchive $zip, string $sourcePath, string $zipPath = ''): void
     {
+        // Normalize source path to absolute path for consistent path calculation
+        $absoluteSourcePath = realpath($sourcePath);
+        if ($absoluteSourcePath === false) {
+            throw new \RuntimeException("Source path not found: $sourcePath");
+        }
+
         $iterator = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($sourcePath, RecursiveDirectoryIterator::SKIP_DOTS),
+            new RecursiveDirectoryIterator($absoluteSourcePath, RecursiveDirectoryIterator::SKIP_DOTS),
             RecursiveIteratorIterator::SELF_FIRST
         );
 
         foreach ($iterator as $file) {
             $filePath = $file->getRealPath();
             // Strip source path and leading slash to get relative path
-            $relativeInSource = substr($filePath, strlen($sourcePath));
+            $relativeInSource = substr($filePath, strlen($absoluteSourcePath));
             $relativeInSource = ltrim($relativeInSource, '/\\');
             $relativePath = $zipPath . $relativeInSource;
 

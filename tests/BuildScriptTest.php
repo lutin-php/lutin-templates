@@ -203,6 +203,74 @@ class BuildScriptTest extends TestCase
     }
 
     /**
+     * Test that ZIP structure is correct when using relative paths (regression test)
+     * This ensures paths aren't truncated when source path is relative
+     */
+    public function testZipStructureWithRelativePath(): void
+    {
+        $_ENV['GITHUB_REPOSITORY'] = 'test/repo';
+        $_ENV['RELEASE_VERSION'] = '1.0.0-test';
+
+        // Create builder with RELATIVE path (like CLI usage)
+        $relativeBuilder = new \StarterBuilder(
+            'starters',  // Relative path!
+            $this->testDistDir,
+            $this->testManifestFile
+        );
+
+        ob_start();
+        $relativeBuilder->build('test/repo', '1.0.0-test');
+        ob_end_clean();
+
+        $zipFiles = glob($this->testDistDir . '/*.zip');
+        $this->assertNotEmpty($zipFiles);
+
+        foreach ($zipFiles as $zipFile) {
+            $zip = new \ZipArchive();
+            $zip->open($zipFile);
+
+            // Collect all file names
+            $fileNames = [];
+            for ($i = 0; $i < $zip->numFiles; $i++) {
+                $fileNames[] = $zip->getNameIndex($i);
+            }
+            $zip->close();
+
+            // Verify key files exist with FULL paths (not truncated)
+            $expectedFiles = [
+                '/public/index.php',
+                '/public/about.php',
+                '/public/post.php',
+                '/lutin/AGENTS.md',
+            ];
+
+            foreach ($expectedFiles as $expected) {
+                $found = false;
+                foreach ($fileNames as $name) {
+                    if (str_ends_with($name, $expected)) {
+                        $found = true;
+                        break;
+                    }
+                }
+                $this->assertTrue($found, "ZIP should contain file ending with '$expected'. Got: " . implode(', ', $fileNames));
+            }
+
+            // Verify NO truncated paths (like 't.php', 'ut.php', 'ex.php')
+            $truncatedPatterns = ['t.php', 'ut.php', 'ex.php', 'ets/', 'son'];
+            foreach ($fileNames as $name) {
+                foreach ($truncatedPatterns as $pattern) {
+                    // Check if the file NAME (not full path) matches truncated patterns
+                    $baseName = basename($name);
+                    $this->assertFalse(
+                        $baseName === $pattern || str_ends_with($name, '/' . $pattern),
+                        "ZIP contains truncated path '$name' - this indicates a path calculation bug"
+                    );
+                }
+            }
+        }
+    }
+
+    /**
      * Test manifest content structure for each starter
      */
     public function testManifestContainsValidStarterEntries(): void

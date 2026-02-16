@@ -103,6 +103,19 @@ php scripts/build-zips.php
 # - starters.json (manifest with hashes)
 ```
 
+### Running Tests
+
+```bash
+# Run all tests
+php scripts/run-tests.php
+```
+
+Tests verify:
+- Build script creates valid ZIP archives
+- `starters.json` has correct structure and hashes
+- ZIP files contain expected files (public/, index.php, etc.)
+- Environment variable validation
+
 ### Automated Releases
 
 On every push to `main`:

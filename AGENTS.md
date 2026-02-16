@@ -161,6 +161,78 @@ This ensures the documentation remains relevant and useful long after the initia
 
 ---
 
+## Testing
+
+This repository includes a lightweight custom test framework (no external dependencies).
+
+### Running Tests
+
+```bash
+php scripts/run-tests.php
+```
+
+### Test Structure
+
+```
+tests/
+├── bootstrap.php       # Test initialization
+├── TestCase.php        # Base test class (PHPUnit-like API)
+├── run-tests.php       # Test runner script
+└── BuildScriptTest.php # Tests for build-zips.php
+```
+
+### Writing New Tests
+
+Create a class extending `TestCase` with methods starting with `test`:
+
+```php
+<?php
+declare(strict_types=1);
+
+namespace LutinStarters\Tests;
+
+class MyFeatureTest extends TestCase
+{
+    protected function setUp(): void
+    {
+        // Run before each test
+    }
+
+    protected function tearDown(): void
+    {
+        // Run after each test
+    }
+
+    public function testSomething(): void
+    {
+        $this->assertTrue(true);
+        $this->assertEquals('expected', 'actual');
+    }
+}
+```
+
+### Available Assertions
+
+- `assertTrue($condition, $message)`
+- `assertFalse($condition, $message)`
+- `assertEquals($expected, $actual, $message)`
+- `assertNotEmpty($actual, $message)`
+- `assertEmpty($actual, $message)`
+- `assertStringContainsString($needle, $haystack, $message)`
+- `assertStringStartsWith($prefix, $string, $message)`
+- `assertStringEndsWith($suffix, $string, $message)`
+- `assertFileExists($filename, $message)`
+- `assertFileDoesNotExist($filename, $message)`
+- `assertIsArray($actual, $message)`
+- `assertIsInt($actual, $message)`
+- `assertIsString($actual, $message)`
+- `assertGreaterThan($expected, $actual, $message)`
+- `assertJson($json, $message)`
+- `assertArrayHasKey($key, $array, $message)`
+- `assertInstanceOf($expected, $actual, $message)`
+
+---
+
 ## Adding Example Content
 
 Starters should include minimal example content to demonstrate functionality:

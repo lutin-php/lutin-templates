@@ -18,3 +18,10 @@ Thumbs.db
 # Temporary files
 tmp/
 temp/
+
+# Test tools
+.tools/
+.phpunit.cache/
+
+# Coverage reports
+.phpunit.cache/coverage-html/

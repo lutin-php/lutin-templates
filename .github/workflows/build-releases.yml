@@ -49,32 +49,12 @@ jobs:
         run: |
           php scripts/build-zips.php
 
-      - name: Update manifest with release URLs
-        run: |
-          VERSION="${{ steps.version.outputs.version }}"
-          REPO="${{ github.repository }}"
-          sed -i "s|v{VERSION}|v${VERSION}|g" starters.json
-          sed -i "s|{REPO}|${REPO}|g" starters.json
-          cat starters.json
-
       - name: Upload dist artifacts
         uses: actions/upload-artifact@v4
         with:
           name: starter-packages
           path: dist/*.zip
           retention-days: 7
-
-      - name: Commit updated starters.json
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add starters.json
-          if git diff --staged --quiet; then
-            echo "No changes to commit"
-          else
-            git commit -m "Update starters.json for v${{ steps.version.outputs.version }}"
-            git push
-          fi
 
       - name: Create Release
         id: create_release
@@ -103,15 +83,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Update manifest with actual release URLs
-        run: |
-          VERSION="${{ steps.version.outputs.version }}"
-          REPO="${{ github.repository }}"
-          # Replace {VERSION} placeholder with actual version in download URLs
-          sed -i "s|v{VERSION}|v${VERSION}|g" starters.json
-          cat starters.json
-
-      - name: Commit final starters.json
+      - name: Commit starters.json
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"

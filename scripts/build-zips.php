@@ -26,9 +26,9 @@ const STARTERS_DIR = __DIR__ . '/../starters';
 const DIST_DIR = __DIR__ . '/../dist';
 const MANIFEST_FILE = __DIR__ . '/../starters.json';
 
-// Runtime configuration - use placeholders for CI to replace
-$githubRepo = '{REPO}';
-$releaseVersion = '{VERSION}';
+// Runtime configuration - fail if required env vars are missing
+$githubRepo = getenv('GITHUB_REPOSITORY') ?: throw new \RuntimeException('GITHUB_REPOSITORY environment variable is required');
+$releaseVersion = getenv('RELEASE_VERSION') ?: throw new \RuntimeException('RELEASE_VERSION environment variable is required');
 
 /**
  * Recursively add a directory to a ZIP archive

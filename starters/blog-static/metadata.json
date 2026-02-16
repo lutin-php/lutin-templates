@@ -1,0 +1,4 @@
+{
+    "name": "Basic Static Blog",
+    "description": "A minimal flat-file blog. All content is stored as Markdown files — no database required."
+}

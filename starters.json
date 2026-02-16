@@ -4,7 +4,7 @@
     "starters": [
         {
             "id": "blog-static",
-            "name": "Project Guide",
+            "name": "Basic Static Blog",
             "description": "This is your flat-file blog. All content is stored as Markdown files \u2014 no database required.",
             "hash": "sha256-a931636a1802a28aba06b0b5b501d7a96c610ef939c744bce936f8dcb775edd8",
             "size": 6781,

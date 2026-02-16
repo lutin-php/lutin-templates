@@ -1,5 +1,15 @@
 {
-    "version": "1.0.0",
-    "generated_at": "",
-    "starters": []
+    "version": null,
+    "generated_at": "2026-02-16T12:59:35+00:00",
+    "starters": [
+        {
+            "id": "blog-static",
+            "name": "Project Guide",
+            "description": "This is your flat-file blog. All content is stored as Markdown files \u2014 no database required.",
+            "hash": "sha256-a931636a1802a28aba06b0b5b501d7a96c610ef939c744bce936f8dcb775edd8",
+            "size": 6781,
+            "zip_name": "blog-static.zip",
+            "download_url": "https://github.com//releases/download/v/blog-static.zip"
+        }
+    ]
 }

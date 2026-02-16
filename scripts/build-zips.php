@@ -27,6 +27,14 @@ const DIST_DIR = __DIR__ . '/../dist';
 const MANIFEST_FILE = __DIR__ . '/../starters.json';
 
 // Runtime configuration - fail if required env vars are missing or empty
+echo "DEBUG: Checking environment variables...\n";
+echo "DEBUG: \$_SERVER['GITHUB_REPOSITORY'] = " . (isset($_SERVER['GITHUB_REPOSITORY']) ? "'" . $_SERVER['GITHUB_REPOSITORY'] . "'" : 'NOT SET') . "\n";
+echo "DEBUG: \$_ENV['GITHUB_REPOSITORY'] = " . (isset($_ENV['GITHUB_REPOSITORY']) ? "'" . $_ENV['GITHUB_REPOSITORY'] . "'" : 'NOT SET') . "\n";
+echo "DEBUG: \$_SERVER['RELEASE_VERSION'] = " . (isset($_SERVER['RELEASE_VERSION']) ? "'" . $_SERVER['RELEASE_VERSION'] . "'" : 'NOT SET') . "\n";
+echo "DEBUG: \$_ENV['RELEASE_VERSION'] = " . (isset($_ENV['RELEASE_VERSION']) ? "'" . $_ENV['RELEASE_VERSION'] . "'" : 'NOT SET') . "\n";
+echo "DEBUG: getenv('GITHUB_REPOSITORY') = " . (getenv('GITHUB_REPOSITORY') !== false ? "'" . getenv('GITHUB_REPOSITORY') . "'" : 'NOT SET') . "\n";
+echo "DEBUG: getenv('RELEASE_VERSION') = " . (getenv('RELEASE_VERSION') !== false ? "'" . getenv('RELEASE_VERSION') . "'" : 'NOT SET') . "\n";
+
 $githubRepo = $_SERVER['GITHUB_REPOSITORY'] ?? $_ENV['GITHUB_REPOSITORY'] ?? null;
 if (empty($githubRepo) || trim($githubRepo) === '') {
     throw new \RuntimeException('GITHUB_REPOSITORY environment variable is required and must not be empty');
@@ -36,6 +44,9 @@ $releaseVersion = $_SERVER['RELEASE_VERSION'] ?? $_ENV['RELEASE_VERSION'] ?? nul
 if (empty($releaseVersion) || trim($releaseVersion) === '') {
     throw new \RuntimeException('RELEASE_VERSION environment variable is required and must not be empty');
 }
+
+echo "DEBUG: Using githubRepo = '{$githubRepo}'\n";
+echo "DEBUG: Using releaseVersion = '{$releaseVersion}'\n";
 
 /**
  * Recursively add a directory to a ZIP archive

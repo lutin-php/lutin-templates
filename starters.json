@@ -1,12 +1,12 @@
 {
     "version": null,
-    "generated_at": "2026-02-16T15:18:42+00:00",
+    "generated_at": "2026-02-16T15:40:51+00:00",
     "starters": [
         {
             "id": "blog-static",
             "name": "Basic Static Blog",
             "description": "A minimal flat-file blog. All content is stored as Markdown files \u2014 no database required.",
-            "hash": "sha256-04a915e3246dbb41624b548afff6c57c03a2831692cd06bc27ae0fc3a7fb4db8",
+            "hash": "sha256-f88bc653a957a84043b3d0bb8d103ea2980888cc6dd6b23040febeb9a7454d9b",
             "size": 7011,
             "zip_name": "blog-static.zip",
             "download_url": "https://github.com//releases/download/v/blog-static.zip"

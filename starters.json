@@ -1,15 +1,15 @@
 {
-    "version": "2026.02.16-f61d1fd",
-    "generated_at": "2026-02-16T19:54:52+00:00",
+    "version": "2026.02.16-068a234",
+    "generated_at": "2026-02-16T20:04:09+00:00",
     "starters": [
         {
             "id": "blog-static",
             "name": "Basic Static Blog",
             "description": "A minimal flat-file blog. All content is stored as Markdown files \u2014 no database required.",
-            "hash": "sha256-1cf0f34000607592b538e7a8aeeb5f05e42e4a2fcabb38a71c71db4507260445",
-            "size": 7009,
+            "hash": "sha256-a12a58874c4b8b9b9eee0828546e0718e08fe2cc873d633105407585a2643a26",
+            "size": 7529,
             "zip_name": "blog-static.zip",
-            "download_url": "https://github.com/lutin-php/lutin-starters/releases/download/v2026.02.16-f61d1fd/blog-static.zip"
+            "download_url": "https://github.com/lutin-php/lutin-starters/releases/download/v2026.02.16-068a234/blog-static.zip"
         }
     ]
 }

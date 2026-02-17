@@ -34,25 +34,25 @@ declare(strict_types=1);
             <h2>Features</h2>
             <ul>
                 <li>Flat-file architecture - no database needed</li>
-                <li>Markdown support for writing posts</li>
+                <li>HTML files for full control over content</li>
                 <li>Clean, responsive design</li>
                 <li>Fast page loads</li>
                 <li>Easy to customize</li>
             </ul>
             
             <h2>How to Add Posts</h2>
-            <p>To create a new blog post, simply add a Markdown file to the 
+            <p>To create a new blog post, simply add an HTML file to the 
                <code>data/posts/</code> directory. Name your file using the format:</p>
             
-            <pre><code>YYYY-MM-DD-post-slug.md</code></pre>
+            <pre><code>YYYY-MM-DD-post-slug.html</code></pre>
             
             <p>For example:</p>
-            <pre><code>2026-02-16-hello-world.md</code></pre>
+            <pre><code>2026-02-16-hello-world.html</code></pre>
             
-            <p>Each post should start with a heading:</p>
-            <pre><code># My Post Title
+            <p>Each post should include an <code>&lt;h1&gt;</code> for the title:</p>
+            <pre><code>&lt;h1&gt;My Post Title&lt;/h1&gt;
 
-This is the first paragraph of my post...</code></pre>
+&lt;p&gt;This is the first paragraph of my post...&lt;/p&gt;</code></pre>
             
             <a href="index.php" class="back-link">← Back to home</a>
         </article>

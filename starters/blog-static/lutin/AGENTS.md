@@ -1,6 +1,6 @@
 # Project Guide
 
-This is your flat-file blog. All content is stored as Markdown files — no database required.
+This is your flat-file blog. All content is stored as HTML files — no database required.
 
 ## Project Structure
 
@@ -13,7 +13,7 @@ This is your flat-file blog. All content is stored as Markdown files — no data
 │       └── style.css    # Main stylesheet
 ├── src/                 # Private PHP logic
 ├── data/
-│   └── posts/           # Markdown blog posts
+│   └── posts/           # HTML blog posts
 └── lutin/
     └── AGENTS.md        # This file
 ```
@@ -24,21 +24,30 @@ This is your flat-file blog. All content is stored as Markdown files — no data
 
 1. Create a file in `data/posts/` named with the pattern:
    ```
-   YYYY-MM-DD-your-post-slug.md
+   YYYY-MM-DD-your-post-slug.html
    ```
 
-2. Start with a heading:
-   ```markdown
-   # Your Post Title
+2. Write your content using HTML:
+   ```html
+   <h1>Your Post Title</h1>
    
-   Your content here...
+   <p>Your content here...</p>
+   
+   <p>Multiple paragraphs are supported.</p>
    ```
 
 3. The post appears automatically on the homepage
 
 ### Editing Existing Posts
 
-Simply modify the Markdown files in `data/posts/`. Changes are immediate.
+Simply modify the HTML files in `data/posts/`. Changes are immediate.
+
+### HTML Tips
+
+- The first `<h1>` tag is used as the post title
+- The first `<p>` tag is used as the excerpt on the homepage
+- All HTML in the file is included directly in the page
+- Use standard HTML tags for formatting
 
 ## Customization
 

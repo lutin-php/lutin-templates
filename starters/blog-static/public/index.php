@@ -12,7 +12,7 @@ $postsDir = __DIR__ . '/../data/posts';
 $posts = [];
 
 if (is_dir($postsDir)) {
-    $files = glob($postsDir . '/*.md');
+    $files = glob($postsDir . '/*.html');
     rsort($files); // Sort by filename (date)
     
     foreach ($files as $file) {
@@ -21,25 +21,27 @@ if (is_dir($postsDir)) {
             continue;
         }
         
-        // Extract title from first heading
+        // Extract title from first <h1> tag
         $title = 'Untitled';
-        if (preg_match('/^#\s+(.+)$/m', $content, $matches)) {
-            $title = trim($matches[1]);
+        if (preg_match('/<h1[^>]*>(.+?)<\/h1>/i', $content, $matches)) {
+            $title = strip_tags(trim($matches[1]));
         }
         
-        // Extract excerpt (first paragraph after title)
+        // Extract excerpt from first <p> tag
         $excerpt = '';
-        if (preg_match('/^#\s+.+\n\n(.+?)(?:\n\n|\n#|$)/s', $content, $matches)) {
-            $excerpt = trim($matches[1]);
-            // Strip markdown for plain text excerpt
-            $excerpt = preg_replace('/[\*\_\`]/', '', $excerpt);
+        if (preg_match('/<p[^>]*>(.+?)<\/p>/is', $content, $matches)) {
+            $excerpt = strip_tags(trim($matches[1]));
+            // Limit excerpt length
+            if (strlen($excerpt) > 150) {
+                $excerpt = substr($excerpt, 0, 150) . '...';
+            }
         }
         
         $posts[] = [
-            'slug' => basename($file, '.md'),
+            'slug' => basename($file, '.html'),
             'title' => $title,
             'excerpt' => $excerpt,
-            'date' => date('F j, Y', strtotime(substr(basename($file, '.md'), 0, 10))),
+            'date' => date('F j, Y', strtotime(substr(basename($file, '.html'), 0, 10))),
         ];
     }
 }
@@ -67,7 +69,7 @@ if (is_dir($postsDir)) {
         <section class="intro">
             <h2>Welcome!</h2>
             <p>This is a simple static blog powered by Lutin.php. 
-               Posts are stored as Markdown files in the data directory.</p>
+               Posts are stored as HTML files in the data directory.</p>
         </section>
 
         <section class="posts">
@@ -76,7 +78,7 @@ if (is_dir($postsDir)) {
             <?php if (empty($posts)): ?>
                 <article class="post">
                     <h3>No posts yet</h3>
-                    <p>Create your first post by adding a Markdown file to <code>data/posts/</code></p>
+                    <p>Create your first post by adding an HTML file to <code>data/posts/</code></p>
                 </article>
             <?php else: ?>
                 <?php foreach (array_slice($posts, 0, 5) as $post): ?>

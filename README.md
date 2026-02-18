@@ -1,53 +1,53 @@
-# Lutin-Starters
+# Lutin-Templates
 
 [![Build Releases](https://github.com/USER/REPO/actions/workflows/build-releases.yml/badge.svg)](https://github.com/USER/REPO/actions/workflows/build-releases.yml)
 
-Centralized repository for managing, building, and distributing starter templates for the [Lutin.php](https://github.com/lutin-php/lutin-php) ecosystem.
+Centralized repository for managing, building, and distributing project templates for the [Lutin.php](https://github.com/lutin-php/lutin-php) ecosystem.
 
 ## Overview
 
-Lutin-Starters packages boilerplate projects into distributable ZIP files, generates a JSON manifest, and uses GitHub Releases for distribution. Remote Lutin.php instances fetch the manifest to offer one-click starter installation to users.
+Lutin-Templates packages boilerplate projects into distributable ZIP files, generates a JSON manifest, and uses GitHub Releases for distribution. Remote Lutin.php instances fetch the manifest to offer one-click template installation to users.
 
-## Available Starters
+## Available Templates
 
-| Starter | Description | Size |
+| Template | Description | Size |
 |---------|-------------|------|
-| [blog-static](./starters/blog-static) | Minimal flat-file blog with public/private structure | ~5 KB |
+| [blog-static](./templates/blog-static) | Minimal flat-file blog with public/private structure | ~5 KB |
 
 ## Repository Structure
 
 ```
 ├── .github/workflows/build-releases.yml  # CI/CD automation
 ├── scripts/build-zips.php                # Build script
-├── starters/                             # Starter templates
-│   └── blog-static/                      # Example: blog starter
+├── templates/                            # Project templates
+│   └── blog-static/                      # Example: blog template
 │       ├── public/                       # Web root files
 │       ├── data/                         # Private data
 │       └── lutin/AGENTS.md               # AI guidance
 ├── dist/                                 # Generated ZIPs (git-ignored)
-└── starters.json                         # Generated manifest
+└── templates.json                        # Generated manifest
 ```
 
 ## Quick Start
 
-### For Users (Installing Starters)
+### For Users (Installing Templates)
 
-When you first access Lutin.php, the setup wizard will guide you through selecting and installing a starter template:
+When you first access Lutin.php, the setup wizard will guide you through selecting and installing a project template:
 
 1. Complete the initial setup (password, API provider, data directory)
-2. **Select a starter** from the available templates
-3. Lutin downloads and extracts the starter automatically
+2. **Select a template** from the available options
+3. Lutin downloads and extracts the template automatically
 4. Start building your project with AI assistance
 
-The starter installation is a mandatory step during first-time setup, ensuring every project begins with a solid foundation.
+The template installation is a mandatory step during first-time setup, ensuring every project begins with a solid foundation.
 
-### For Contributors (Adding Starters)
+### For Contributors (Adding Templates)
 
 1. **Fork this repository**
 
-2. **Create your starter** in `starters/your-starter-name/`:
+2. **Create your template** in `templates/your-template-name/`:
    ```
-   starters/your-starter-name/
+   templates/your-template-name/
    ├── public/              # Required: Web-accessible files
    │   └── index.php        # Required: Entry point
    ├── lutin/
@@ -62,11 +62,11 @@ The starter installation is a mandatory step during first-time setup, ensuring e
 
 4. **Submit a Pull Request**
 
-## Starter Architecture
+## Template Architecture
 
 ### The Public/Private Split
 
-All starters must follow this security-conscious structure:
+All templates must follow this security-conscious structure:
 
 | Location | Purpose | Installation Target |
 |----------|---------|---------------------|
@@ -79,14 +79,14 @@ This ensures sensitive files are never directly accessible via HTTP.
 
 ### The `AGENTS.md` File
 
-Each starter must include `lutin/AGENTS.md` — this tells the Lutin AI:
+Each template must include `lutin/AGENTS.md` — this tells the Lutin AI:
 
 - Where key files are located
 - How to add content (posts, pages, etc.)
 - How to customize the design
 - Architecture and security notes
 
-See [blog-static/lutin/AGENTS.md](./starters/blog-static/lutin/AGENTS.md) for an example.
+See [blog-static/lutin/AGENTS.md](./templates/blog-static/lutin/AGENTS.md) for an example.
 
 ## Build System
 
@@ -95,12 +95,12 @@ See [blog-static/lutin/AGENTS.md](./starters/blog-static/lutin/AGENTS.md) for an
 Requirements: PHP 8.1+ with `zip` extension
 
 ```bash
-# Build all starters and generate manifest
+# Build all templates and generate manifest
 php scripts/build-zips.php
 
 # Output:
-# - dist/*.zip (starter packages)
-# - starters.json (manifest with hashes)
+# - dist/*.zip (template packages)
+# - templates.json (manifest with hashes)
 ```
 
 ### Running Tests
@@ -112,7 +112,7 @@ php scripts/run-tests.php
 
 Tests verify:
 - Build script creates valid ZIP archives
-- `starters.json` has correct structure and hashes
+- `templates.json` has correct structure and hashes
 - ZIP files contain expected files (public/, index.php, etc.)
 - Environment variable validation
 
@@ -122,10 +122,10 @@ On every push to `main`:
 
 1. GitHub Actions runs the build script
 2. Creates a new Release with generated ZIPs as assets
-3. Updates `starters.json` with download URLs
+3. Updates `templates.json` with download URLs
 4. Commits the updated manifest
 
-## The Manifest (`starters.json`)
+## The Manifest (`templates.json`)
 
 The manifest is the public API that remote Lutin instances consume:
 
@@ -133,7 +133,7 @@ The manifest is the public API that remote Lutin instances consume:
 {
   "version": "2026.02.16-abc123",
   "generated_at": "2026-02-16T12:00:00+00:00",
-  "starters": [
+  "templates": [
     {
       "id": "blog-static",
       "name": "Minimal Static Blog",
@@ -149,19 +149,19 @@ The manifest is the public API that remote Lutin instances consume:
 
 Fetch the raw manifest:
 ```
-https://raw.githubusercontent.com/USER/REPO/main/starters.json
+https://raw.githubusercontent.com/USER/REPO/main/templates.json
 ```
 
-## Starter Ideas
+## Template Ideas
 
 - [x] **blog-static** — Flat-file blog
 - [ ] **portfolio-minimal** — Clean portfolio site
 - [ ] **docs-site** — Documentation template
 - [ ] **landing-page** — Marketing landing page
 - [ ] **admin-dashboard** — Simple admin panel
-- [ ] **api-starter** — REST API boilerplate
+- [ ] **api-template** — REST API boilerplate
 
-Want to contribute a starter? See [Contributing](#contributing).
+Want to contribute a template? See [Contributing](#contributing).
 
 ## License
 

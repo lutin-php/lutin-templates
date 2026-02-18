@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace LutinStarters\Tests;
+namespace LutinTemplates\Tests;
 
 /**
  * Lightweight test case base class

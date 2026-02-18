@@ -1,0 +1,15 @@
+{
+    "version": "1.0.0-test",
+    "generated_at": "2026-02-18T20:18:24+00:00",
+    "templates": [
+        {
+            "id": "blog-static",
+            "name": "Basic Static Blog",
+            "description": "A minimal flat-file blog. All content is stored as HTML files \u2014 no database required.",
+            "hash": "sha256-be40c535d407b4ea89795cdd650bd5fe9956489ddb17cdd4108c620ee4481502",
+            "size": 7662,
+            "zip_name": "blog-static.zip",
+            "download_url": "https://github.com/test/repo/releases/download/v1.0.0-test/blog-static.zip"
+        }
+    ]
+}

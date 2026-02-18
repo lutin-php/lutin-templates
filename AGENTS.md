@@ -1,13 +1,13 @@
-# AGENTS.md — Lutin-Starters Repository
+# AGENTS.md — Lutin-Templates Repository
 
 ## Project Overview
 
-**Lutin-Starters** is a centralized repository system for managing, building, and distributing starter templates (boilerplates) for the Lutin.php ecosystem.
+**Lutin-Templates** is a centralized repository system for managing, building, and distributing project templates (boilerplates) for the Lutin.php ecosystem.
 
 ### Purpose
 
-- Package starter folders into `.zip` files
-- Generate a JSON manifest (`starters.json`) that serves as an API
+- Package template folders into `.zip` files
+- Generate a JSON manifest (`templates.json`) that serves as an API
 - Use GitHub Releases for distribution
 
 ---
@@ -15,30 +15,30 @@
 ## Repository Layout
 
 ```
-lutin-starters/
+lutin-templates/
 ├── .github/workflows/build-releases.yml  # CI/CD: Builds releases on push to main
 ├── scripts/
 │   └── build-zips.php                    # PHP build script (generates ZIPs + manifest)
-├── starters/                             # Source starter templates
-│   └── blog-static/                      # Example starter (flat-file blog)
+├── templates/                            # Source project templates
+│   └── blog-static/                      # Example template (flat-file blog)
 │       ├── public/                       # Web-accessible files (goes to webroot)
 │       ├── src/                          # Private PHP logic
 │       ├── data/                         # Private data (posts, SQLite, etc.)
 │       └── lutin/
-│           └── AGENTS.md                 # AI guidance for this specific starter
+│           └── AGENTS.md                 # AI guidance for this specific template
 ├── dist/                                 # Generated ZIP files (git-ignored)
-└── starters.json                         # Generated manifest (API for remote Lutin)
+└── templates.json                        # Generated manifest (API for remote Lutin)
 ```
 
 ---
 
 ## Development Workflow
 
-### Adding a New Starter
+### Adding a New Template
 
-1. **Create directory** in `starters/` with kebab-case name:
+1. **Create directory** in `templates/` with kebab-case name:
    ```bash
-   mkdir starters/my-new-starter
+   mkdir templates/my-new-template
    ```
 
 2. **Follow the Public/Private Split**:
@@ -48,7 +48,7 @@ lutin-starters/
    - `lutin/AGENTS.md` — Documentation for the AI agent
 
 3. **Add metadata** (optional):
-   - Create `metadata.json` in the starter root, OR
+   - Create `metadata.json` in the template root, OR
    - Ensure `lutin/AGENTS.md` has a clear H1 title and first paragraph description
 
 4. **Test locally**:
@@ -62,10 +62,10 @@ lutin-starters/
 
 `scripts/build-zips.php`:
 - Requires PHP 8.1+ with `zip` extension
-- Reads all directories from `starters/`
-- Creates `dist/{starter-name}.zip` for each
+- Reads all directories from `templates/`
+- Creates `dist/{template-name}.zip` for each
 - Calculates SHA-256 hash for integrity verification
-- Generates `starters.json` with:
+- Generates `templates.json` with:
   - `id` — Directory name
   - `name` — From metadata or prettified directory name
   - `description` — From metadata or default
@@ -74,12 +74,12 @@ lutin-starters/
 
 ---
 
-## Starter Architecture Requirements
+## Template Architecture Requirements
 
-Every starter MUST follow this structure:
+Every template MUST follow this structure:
 
 ```
-starters/{name}/
+templates/{name}/
 ├── public/              # Required: Web root contents
 │   └── index.php        # Required: Entry point
 ├── lutin/
@@ -94,7 +94,7 @@ This is critical for security:
 - **`public/`** — Contents are extracted to the webroot (where `lutin.php` lives)
 - **Everything else** — Extracted outside webroot, as siblings to the data directory
 
-When Lutin.php installs a starter:
+When Lutin.php installs a template:
 1. Downloads the ZIP from GitHub Releases
 2. Extracts `public/` to the webroot
 3. Extracts other folders to appropriate locations based on permissions
@@ -102,17 +102,17 @@ When Lutin.php installs a starter:
 
 ### AGENTS.md Philosophy
 
-The `AGENTS.md` inside a starter is **not documentation about the starter** — it becomes permanent documentation **for the end user's project**. After installation, the user will continue referencing this file as they maintain and evolve their project.
+The `AGENTS.md` inside a template is **not documentation about the template** — it becomes permanent documentation **for the end user's project**. After installation, the user will continue referencing this file as they maintain and evolve their project.
 
 **Write AGENTS.md as if addressing the project owner, not a template shopper:**
 
-- ❌ "This starter provides a minimal blog..."
+- ❌ "This template provides a minimal blog..."
 - ✅ "This is your flat-file blog..."
 
-- ❌ "The starter includes a public folder..."
+- ❌ "The template includes a public folder..."
 - ✅ "Your web-accessible files are in public/..."
 
-- ❌ "To customize this starter..."
+- ❌ "To customize this template..."
 - ✅ "To customize your site..."
 
 This ensures the documentation remains relevant and useful long after the initial setup.
@@ -129,7 +129,7 @@ This ensures the documentation remains relevant and useful long after the initia
 3. Upload ZIP artifacts
 4. Create GitHub Release with version tag
 5. Upload ZIP files as release assets
-6. Update `starters.json` with correct download URLs
+6. Update `templates.json` with correct download URLs
 7. Commit updated manifest back to repo
 
 ---
@@ -138,7 +138,7 @@ This ensures the documentation remains relevant and useful long after the initia
 
 - **PHP 8.1+** for build scripts
 - **Zero Composer dependencies** — use only built-in PHP functions
-- Starter names use **kebab-case** (e.g., `blog-static`, `portfolio-minimal`)
+- Template names use **kebab-case** (e.g., `blog-static`, `portfolio-minimal`)
 - All paths use `/` forward slashes (normalized for cross-platform)
 
 ---
@@ -146,16 +146,16 @@ This ensures the documentation remains relevant and useful long after the initia
 ## Security Considerations
 
 1. **Never commit `dist/`** — it's git-ignored and regenerated by CI
-2. **Validate filenames** in starters — no special characters that could break ZIPs
+2. **Validate filenames** in templates — no special characters that could break ZIPs
 3. **SHA-256 hashes** are included in manifest for integrity verification
-4. **Starter isolation** — each starter is a separate ZIP, no cross-starter dependencies
+4. **Template isolation** — each template is a separate ZIP, no cross-template dependencies
 
 ---
 
 ## Key Implementation Notes
 
-- The `starters.json` acts as a public API: `https://raw.githubusercontent.com/USER/REPO/main/starters.json`
-- Remote Lutin instances fetch this manifest to show available starters
+- The `templates.json` acts as a public API: `https://raw.githubusercontent.com/USER/REPO/main/templates.json`
+- Remote Lutin instances fetch this manifest to show available templates
 - Version in manifest follows Git tag (e.g., `v2026.02.16-abc123` or `v1.0.0`)
 - Download URLs point to GitHub Release assets, not the repository files
 
@@ -189,7 +189,7 @@ Create a class extending `TestCase` with methods starting with `test`:
 <?php
 declare(strict_types=1);
 
-namespace LutinStarters\Tests;
+namespace LutinTemplates\Tests;
 
 class MyFeatureTest extends TestCase
 {
@@ -235,7 +235,7 @@ class MyFeatureTest extends TestCase
 
 ## Adding Example Content
 
-Starters should include minimal example content to demonstrate functionality:
+Templates should include minimal example content to demonstrate functionality:
 
 - **blog-static**: Include 1-2 sample posts in `data/posts/`
 - **portfolio**: Include placeholder projects

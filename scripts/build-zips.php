@@ -1,12 +1,12 @@
 <?php
 /**
- * Build Script for Lutin-Starters
+ * Build Script for Lutin-Templates
  *
  * This script:
- * 1. Iterates through each folder in /starters/
- * 2. Compresses content into a ZIP file named starter-name.zip
+ * 1. Iterates through each folder in /templates/
+ * 2. Compresses content into a ZIP file named template-name.zip
  * 3. Calculates SHA-256 hash of each ZIP
- * 4. Updates starters.json with metadata
+ * 4. Updates templates.json with metadata
  *
  * Requirements: PHP 8.1+ with zip extension
  *
@@ -25,20 +25,20 @@ if (!extension_loaded('zip')) {
 }
 
 /**
- * Builder class for creating starter ZIP archives and manifest
+ * Builder class for creating template ZIP archives and manifest
  */
-class StarterBuilder
+class TemplateBuilder
 {
-    private string $startersDir;
+    private string $templatesDir;
     private string $distDir;
     private string $manifestFile;
 
     public function __construct(
-        string $startersDir = __DIR__ . '/../starters',
+        string $templatesDir = __DIR__ . '/../templates',
         string $distDir = __DIR__ . '/../dist',
-        string $manifestFile = __DIR__ . '/../starters.json'
+        string $manifestFile = __DIR__ . '/../templates.json'
     ) {
-        $this->startersDir = $startersDir;
+        $this->templatesDir = $templatesDir;
         $this->distDir = $distDir;
         $this->manifestFile = $manifestFile;
     }
@@ -62,7 +62,7 @@ class StarterBuilder
      */
     public function build(string $githubRepo, string $releaseVersion): void
     {
-        echo "=== Lutin-Starters Build Script ===\n\n";
+        echo "=== Lutin-Templates Build Script ===\n\n";
 
         // Ensure dist directory exists
         if (!is_dir($this->distDir)) {
@@ -72,22 +72,22 @@ class StarterBuilder
 
         // Load existing manifest
         $manifest = $this->loadManifest();
-        $starters = [];
+        $templates = [];
 
-        // Get all starter directories
-        $starterDirs = glob($this->startersDir . '/*', GLOB_ONLYDIR);
+        // Get all template directories
+        $templateDirs = glob($this->templatesDir . '/*', GLOB_ONLYDIR);
 
-        if (empty($starterDirs)) {
-            echo "No starter directories found in " . $this->startersDir . "\n";
+        if (empty($templateDirs)) {
+            echo "No template directories found in " . $this->templatesDir . "\n";
             exit(1);
         }
 
-        foreach ($starterDirs as $starterPath) {
-            $starterId = basename($starterPath);
-            $zipName = $starterId . '.zip';
+        foreach ($templateDirs as $templatePath) {
+            $templateId = basename($templatePath);
+            $zipName = $templateId . '.zip';
             $zipPath = $this->distDir . '/' . $zipName;
 
-            echo "Processing starter: {$starterId}\n";
+            echo "Processing template: {$templateId}\n";
 
             // Create ZIP archive
             $zip = new ZipArchive();
@@ -96,8 +96,8 @@ class StarterBuilder
                 continue;
             }
 
-            // Add all files from starter directory
-            $this->addDirectoryToZip($zip, $starterPath, $starterId . '/');
+            // Add all files from template directory
+            $this->addDirectoryToZip($zip, $templatePath, $templateId . '/');
             $zip->close();
 
             // Calculate hash
@@ -108,13 +108,13 @@ class StarterBuilder
             echo "  Size: " . number_format($fileSize) . " bytes\n";
             echo "  SHA-256: {$hash}\n";
 
-            // Try to extract metadata from starter's lutin/AGENTS.md or a metadata.json
-            $metadata = $this->extractStarterMetadata($starterPath, $starterId);
+            // Try to extract metadata from template's lutin/AGENTS.md or a metadata.json
+            $metadata = $this->extractTemplateMetadata($templatePath, $templateId);
 
-            $starters[] = [
-                'id' => $starterId,
-                'name' => $metadata['name'] ?? ucfirst(str_replace('-', ' ', $starterId)),
-                'description' => $metadata['description'] ?? 'A starter template for Lutin.php',
+            $templates[] = [
+                'id' => $templateId,
+                'name' => $metadata['name'] ?? ucfirst(str_replace('-', ' ', $templateId)),
+                'description' => $metadata['description'] ?? 'A project template for Lutin.php',
                 'hash' => 'sha256-' . $hash,
                 'size' => $fileSize,
                 'zip_name' => $zipName,
@@ -127,7 +127,7 @@ class StarterBuilder
         // Update manifest
         $manifest['version'] = $releaseVersion;
         $manifest['generated_at'] = date('c');
-        $manifest['starters'] = $starters;
+        $manifest['templates'] = $templates;
 
         // Save manifest
         $jsonContent = json_encode($manifest, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
@@ -142,7 +142,7 @@ class StarterBuilder
         }
 
         echo "Updated manifest: " . $this->manifestFile . "\n";
-        echo "Total starters: " . count($starters) . "\n";
+        echo "Total templates: " . count($templates) . "\n";
         echo "\nBuild complete!\n";
     }
 
@@ -207,19 +207,19 @@ class StarterBuilder
         return [
             'version' => '1.0',
             'generated_at' => '',
-            'starters' => []
+            'templates' => []
         ];
     }
 
     /**
-     * Extract metadata from starter directory
+     * Extract metadata from template directory
      */
-    public function extractStarterMetadata(string $starterPath, string $starterId): array
+    public function extractTemplateMetadata(string $templatePath, string $templateId): array
     {
         $metadata = [];
 
         // Look for metadata.json
-        $metadataFile = $starterPath . '/metadata.json';
+        $metadataFile = $templatePath . '/metadata.json';
         if (file_exists($metadataFile)) {
             $content = file_get_contents($metadataFile);
             if ($content !== false) {
@@ -232,10 +232,10 @@ class StarterBuilder
 
         // If no metadata.json, try to extract from AGENTS.md
         if (empty($metadata)) {
-            $agentsFile = $starterPath . '/lutin/AGENTS.md';
+            $agentsFile = $templatePath . '/lutin/AGENTS.md';
             if (!file_exists($agentsFile)) {
                 // Try alternative location
-                $agentsFile = $starterPath . '/AGENTS.md';
+                $agentsFile = $templatePath . '/AGENTS.md';
             }
 
             if (file_exists($agentsFile)) {
@@ -260,7 +260,7 @@ class StarterBuilder
 
 // Run the build only when script is called directly (not included)
 if (basename(__FILE__) === basename($_SERVER['SCRIPT_NAME'] ?? '')) {
-    $builder = new StarterBuilder();
+    $builder = new TemplateBuilder();
     $githubRepo = $builder->getRequiredEnv('GITHUB_REPOSITORY');
     $releaseVersion = $builder->getRequiredEnv('RELEASE_VERSION');
     $builder->build($githubRepo, $releaseVersion);

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace LutinStarters\Tests;
+namespace LutinTemplates\Tests;
 
 /**
  * Tests for the build-zips.php script
@@ -13,7 +13,7 @@ class BuildScriptTest extends TestCase
     private string $testManifestFile;
     private string $originalManifest;
     private array $envBackup;
-    private ?\StarterBuilder $builder = null;
+    private ?\TemplateBuilder $builder = null;
 
     protected function setUp(): void
     {
@@ -25,22 +25,22 @@ class BuildScriptTest extends TestCase
 
         // Set up test directories
         $this->testDistDir = TEST_TMP_DIR . '/dist-' . uniqid();
-        $this->testManifestFile = TEST_TMP_DIR . '/starters-' . uniqid() . '.json';
+        $this->testManifestFile = TEST_TMP_DIR . '/templates-' . uniqid() . '.json';
 
         if (!is_dir($this->testDistDir)) {
             mkdir($this->testDistDir, 0755, true);
         }
 
         // Backup original manifest if exists
-        $originalManifestPath = PROJECT_ROOT . '/starters.json';
+        $originalManifestPath = PROJECT_ROOT . '/templates.json';
         if (file_exists($originalManifestPath)) {
             $this->originalManifest = file_get_contents($originalManifestPath);
         }
 
         // Load the builder class
         require_once PROJECT_ROOT . '/scripts/build-zips.php';
-        $this->builder = new \StarterBuilder(
-            PROJECT_ROOT . '/starters',
+        $this->builder = new \TemplateBuilder(
+            PROJECT_ROOT . '/templates',
             $this->testDistDir,
             $this->testManifestFile
         );
@@ -64,7 +64,7 @@ class BuildScriptTest extends TestCase
         }
 
         // Restore original manifest
-        $originalManifestPath = PROJECT_ROOT . '/starters.json';
+        $originalManifestPath = PROJECT_ROOT . '/templates.json';
         if (isset($this->originalManifest)) {
             file_put_contents($originalManifestPath, $this->originalManifest);
         }
@@ -132,7 +132,7 @@ class BuildScriptTest extends TestCase
         $output = ob_get_clean();
 
         // Assert the script ran successfully
-        $this->assertStringContainsString('=== Lutin-Starters Build Script ===', $output);
+        $this->assertStringContainsString('=== Lutin-Templates Build Script ===', $output);
         $this->assertStringContainsString('Build complete!', $output);
 
         // Check that ZIP files were created
@@ -150,8 +150,8 @@ class BuildScriptTest extends TestCase
         $this->assertIsArray($manifest);
         $this->assertArrayHasKey('version', $manifest);
         $this->assertArrayHasKey('generated_at', $manifest);
-        $this->assertArrayHasKey('starters', $manifest);
-        $this->assertIsArray($manifest['starters']);
+        $this->assertArrayHasKey('templates', $manifest);
+        $this->assertIsArray($manifest['templates']);
     }
 
     /**
@@ -212,8 +212,8 @@ class BuildScriptTest extends TestCase
         $_ENV['RELEASE_VERSION'] = '1.0.0-test';
 
         // Create builder with RELATIVE path (like CLI usage)
-        $relativeBuilder = new \StarterBuilder(
-            'starters',  // Relative path!
+        $relativeBuilder = new \TemplateBuilder(
+            'templates',  // Relative path!
             $this->testDistDir,
             $this->testManifestFile
         );
@@ -271,9 +271,9 @@ class BuildScriptTest extends TestCase
     }
 
     /**
-     * Test manifest content structure for each starter
+     * Test manifest content structure for each template
      */
-    public function testManifestContainsValidStarterEntries(): void
+    public function testManifestContainsValidTemplateEntries(): void
     {
         $_ENV['GITHUB_REPOSITORY'] = 'test/repo';
         $_ENV['RELEASE_VERSION'] = '1.0.0-test';
@@ -285,42 +285,42 @@ class BuildScriptTest extends TestCase
         $manifestContent = file_get_contents($this->testManifestFile);
         $manifest = json_decode($manifestContent, true);
 
-        $this->assertArrayHasKey('starters', $manifest);
-        $this->assertNotEmpty($manifest['starters'], 'Manifest should contain at least one starter');
+        $this->assertArrayHasKey('templates', $manifest);
+        $this->assertNotEmpty($manifest['templates'], 'Manifest should contain at least one template');
 
-        foreach ($manifest['starters'] as $starter) {
-            $this->assertArrayHasKey('id', $starter);
-            $this->assertArrayHasKey('name', $starter);
-            $this->assertArrayHasKey('description', $starter);
-            $this->assertArrayHasKey('hash', $starter);
-            $this->assertArrayHasKey('size', $starter);
-            $this->assertArrayHasKey('zip_name', $starter);
-            $this->assertArrayHasKey('download_url', $starter);
+        foreach ($manifest['templates'] as $template) {
+            $this->assertArrayHasKey('id', $template);
+            $this->assertArrayHasKey('name', $template);
+            $this->assertArrayHasKey('description', $template);
+            $this->assertArrayHasKey('hash', $template);
+            $this->assertArrayHasKey('size', $template);
+            $this->assertArrayHasKey('zip_name', $template);
+            $this->assertArrayHasKey('download_url', $template);
 
             // Validate hash format
-            $this->assertStringStartsWith('sha256-', $starter['hash']);
-            $this->assertEquals(71, strlen($starter['hash'])); // 'sha256-' + 64 hex chars
+            $this->assertStringStartsWith('sha256-', $template['hash']);
+            $this->assertEquals(71, strlen($template['hash'])); // 'sha256-' + 64 hex chars
 
             // Validate size is positive integer
-            $this->assertIsInt($starter['size']);
-            $this->assertGreaterThan(0, $starter['size']);
+            $this->assertIsInt($template['size']);
+            $this->assertGreaterThan(0, $template['size']);
 
             // Validate download URL format
-            $this->assertStringStartsWith('https://github.com/', $starter['download_url']);
-            $this->assertStringContainsString('/releases/download/', $starter['download_url']);
-            $this->assertStringEndsWith($starter['zip_name'], $starter['download_url']);
+            $this->assertStringStartsWith('https://github.com/', $template['download_url']);
+            $this->assertStringContainsString('/releases/download/', $template['download_url']);
+            $this->assertStringEndsWith($template['zip_name'], $template['download_url']);
 
             // Validate ZIP file exists
-            $zipPath = $this->testDistDir . '/' . $starter['zip_name'];
+            $zipPath = $this->testDistDir . '/' . $template['zip_name'];
             $this->assertFileExists($zipPath);
 
             // Verify hash matches actual file
             $actualHash = hash_file('sha256', $zipPath);
-            $this->assertEquals($starter['hash'], 'sha256-' . $actualHash);
+            $this->assertEquals($template['hash'], 'sha256-' . $actualHash);
 
             // Verify size matches actual file
             $actualSize = filesize($zipPath);
-            $this->assertEquals($starter['size'], $actualSize);
+            $this->assertEquals($template['size'], $actualSize);
         }
     }
 
@@ -386,8 +386,8 @@ class BuildScriptTest extends TestCase
     public function testLoadManifestReturnsDefaultStructure(): void
     {
         $nonExistentFile = TEST_TMP_DIR . '/non-existent-' . uniqid() . '.json';
-        $builder = new \StarterBuilder(
-            PROJECT_ROOT . '/starters',
+        $builder = new \TemplateBuilder(
+            PROJECT_ROOT . '/templates',
             $this->testDistDir,
             $nonExistentFile
         );
@@ -397,20 +397,20 @@ class BuildScriptTest extends TestCase
         $this->assertIsArray($manifest);
         $this->assertArrayHasKey('version', $manifest);
         $this->assertArrayHasKey('generated_at', $manifest);
-        $this->assertArrayHasKey('starters', $manifest);
+        $this->assertArrayHasKey('templates', $manifest);
         $this->assertEquals('1.0', $manifest['version']);
-        $this->assertIsArray($manifest['starters']);
-        $this->assertEmpty($manifest['starters']);
+        $this->assertIsArray($manifest['templates']);
+        $this->assertEmpty($manifest['templates']);
     }
 
     /**
-     * Test extractStarterMetadata from AGENTS.md
+     * Test extractTemplateMetadata from AGENTS.md
      */
     public function testExtractMetadataFromAgentsMd(): void
     {
-        // The blog-static starter has an AGENTS.md file
-        $metadata = $this->builder->extractStarterMetadata(
-            PROJECT_ROOT . '/starters/blog-static',
+        // The blog-static template has an AGENTS.md file
+        $metadata = $this->builder->extractTemplateMetadata(
+            PROJECT_ROOT . '/templates/blog-static',
             'blog-static'
         );
 

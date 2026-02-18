@@ -1,4 +1,4 @@
-name: Build and Release Starters
+name: Build and Release Templates
 
 on:
   push:
@@ -16,7 +16,7 @@ env:
 
 jobs:
   build:
-    name: Build Starter Packages
+    name: Build Template Packages
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -52,7 +52,7 @@ jobs:
       - name: Upload dist artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: starter-packages
+          name: template-packages
           path: dist/*.zip
           retention-days: 7
 
@@ -63,19 +63,19 @@ jobs:
           tag_name: v${{ steps.version.outputs.version }}
           name: Release v${{ steps.version.outputs.version }}
           body: |
-            ## Lutin.php Starter Templates
+            ## Lutin.php Project Templates
             
-            This release contains the following starter packages:
+            This release contains the following template packages:
             
-            ${{ steps.list_starters.outputs.starters_list }}
+            ${{ steps.list_templates.outputs.templates_list }}
             
             ### Installation
             
-            Download the starter package you want and extract it to your project directory.
+            Download the template package you want and extract it to your project directory.
             
             ### Verification
             
-            All packages include SHA-256 hashes for verification. See `starters.json` for hash values.
+            All packages include SHA-256 hashes for verification. See `templates.json` for hash values.
           files: dist/*.zip
           generate_release_notes: false
           draft: false
@@ -83,14 +83,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Commit starters.json
+      - name: Commit templates.json
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add starters.json
+          git add templates.json
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Update starters.json with release URLs for v${{ steps.version.outputs.version }}"
+            git commit -m "Update templates.json with release URLs for v${{ steps.version.outputs.version }}"
             git push
           fi

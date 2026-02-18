@@ -4,7 +4,7 @@
 declare(strict_types=1);
 
 /**
- * Simple test runner for Lutin-Starters
+ * Simple test runner for Lutin-Templates
  * 
  * Usage: php scripts/run-tests.php
  */
@@ -59,7 +59,7 @@ function findTestClasses(string $testsDir): array
 
     foreach ($files as $file) {
         $className = basename($file, '.php');
-        $classes[] = 'LutinStarters\\Tests\\' . $className;
+        $classes[] = 'LutinTemplates\\Tests\\' . $className;
     }
 
     return $classes;
@@ -105,7 +105,7 @@ function runTests(array $testClasses): array
  */
 function main(): int
 {
-    printMessage("=== Lutin-Starters Test Runner ===\n", YELLOW);
+    printMessage("=== Lutin-Templates Test Runner ===\n", YELLOW);
 
     // Check requirements
     if (!checkPhpVersion()) {

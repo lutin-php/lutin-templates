@@ -25,7 +25,7 @@ require __DIR__ . '/TestCase.php';
 
 // Autoloader for test classes
 spl_autoload_register(function (string $class): void {
-    $prefix = 'LutinStarters\\Tests\\';
+    $prefix = 'LutinTemplates\\Tests\\';
     $baseDir = __DIR__ . '/';
 
     $len = strlen($prefix);
